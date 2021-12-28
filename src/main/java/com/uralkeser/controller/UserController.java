@@ -1,10 +1,15 @@
 package com.uralkeser.controller;
 
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.uralkeser.converter.UserConverter;
+import com.uralkeser.dto.UserDto;
 import com.uralkeser.entity.User;
 import com.uralkeser.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,21 +22,41 @@ public class UserController {
     UserService userService;
 
     @GetMapping("")
-    public List<User> findAll() {
-        return userService.findAll();
+    public MappingJacksonValue findAll() {
+        List<User> userList;
+        userList = userService.findAll();
+        List<UserDto> userDtoList = UserConverter.INSTANCE.convertUserListToUserDtoList(userList);
+
+        SimpleBeanPropertyFilter filter= SimpleBeanPropertyFilter.filterOutAllExcept("name","lastName");
+        SimpleFilterProvider filters = new SimpleFilterProvider().addFilter("UserDtoFilter",filter);
+        MappingJacksonValue mapping = new MappingJacksonValue(userDtoList);
+        mapping.setFilters(filters);
+
+        return mapping;
     }
 
     @GetMapping("/{id}")
-    public User findById(@PathVariable String id) {
-        return userService.findById(id);
+    public MappingJacksonValue findById(@PathVariable String id) {
+
+        User user = userService.findById(id);
+        UserDto userDto = UserConverter.INSTANCE.convertUserToUserDto(user);
+
+        SimpleBeanPropertyFilter filter= SimpleBeanPropertyFilter.filterOutAllExcept("name","lastName");
+        SimpleFilterProvider filters = new SimpleFilterProvider().addFilter("UserDtoFilter",filter);
+        MappingJacksonValue mapping = new MappingJacksonValue(userDto);
+        mapping.setFilters(filters);
+
+        return mapping;
     }
 
     @PostMapping("")
-    public ResponseEntity<Object> save(@RequestBody User category) {
+    public ResponseEntity<Object> save(@RequestBody UserDto userDto) {
 
-        category = userService.save(category);
+        User user = UserConverter.INSTANCE.convertUserDtoToUser(userDto);
 
-        return new ResponseEntity<>(category, HttpStatus.CREATED);
+        user = userService.save(user);
+
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

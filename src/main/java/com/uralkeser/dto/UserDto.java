@@ -1,11 +1,10 @@
-package com.uralkeser.entity;
+package com.uralkeser.dto;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "User")
-public class User {
-
+@JsonFilter("UserDtoFilter")
+public class UserDto {
     @Id
     private String id;
     private String name;
@@ -62,7 +61,7 @@ public class User {
         this.username = username;
     }
 
-    public User(String id, String name, String lastName, String email, String mobileNumber, String username) {
+    public UserDto(String id, String name, String lastName, String email, String mobileNumber, String username) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
