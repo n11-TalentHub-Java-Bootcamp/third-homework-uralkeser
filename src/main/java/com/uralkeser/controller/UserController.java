@@ -27,7 +27,7 @@ public class UserController {
         userList = userService.findAll();
         List<UserDto> userDtoList = UserConverter.INSTANCE.convertUserListToUserDtoList(userList);
 
-        SimpleBeanPropertyFilter filter= SimpleBeanPropertyFilter.filterOutAllExcept("name","lastName");
+        SimpleBeanPropertyFilter filter= SimpleBeanPropertyFilter.filterOutAllExcept("name","lastName"); //show only name and lastName fields of the User
         SimpleFilterProvider filters = new SimpleFilterProvider().addFilter("UserDtoFilter",filter);
         MappingJacksonValue mapping = new MappingJacksonValue(userDtoList);
         mapping.setFilters(filters);
@@ -41,7 +41,7 @@ public class UserController {
         User user = userService.findById(id);
         UserDto userDto = UserConverter.INSTANCE.convertUserToUserDto(user);
 
-        SimpleBeanPropertyFilter filter= SimpleBeanPropertyFilter.filterOutAllExcept("name","lastName");
+        SimpleBeanPropertyFilter filter= SimpleBeanPropertyFilter.filterOutAllExcept("name","lastName"); //show only name and lastName fields of the User
         SimpleFilterProvider filters = new SimpleFilterProvider().addFilter("UserDtoFilter",filter);
         MappingJacksonValue mapping = new MappingJacksonValue(userDto);
         mapping.setFilters(filters);

@@ -27,7 +27,7 @@ public class ProductReviewController {
         productReviewList = productReviewService.findAll();
         List<ProductReviewDto> productReviewDtoList = ProductReviewConverter.INSTANCE.convertProductReviewListToProductReviewDtoList(productReviewList);
 
-        SimpleBeanPropertyFilter filter= SimpleBeanPropertyFilter.filterOutAllExcept("review","date");
+        SimpleBeanPropertyFilter filter= SimpleBeanPropertyFilter.filterOutAllExcept("review","date"); //show only review and date
         SimpleFilterProvider filters = new SimpleFilterProvider().addFilter("ProductReviewDtoFilter",filter);
         MappingJacksonValue mapping = new MappingJacksonValue(productReviewDtoList);
         mapping.setFilters(filters);
@@ -40,7 +40,7 @@ public class ProductReviewController {
         ProductReview productReview = productReviewService.findById(id);
         ProductReviewDto productReviewDto = ProductReviewConverter.INSTANCE.convertProductReviewToProductReviewDto(productReview);
 
-        SimpleBeanPropertyFilter filter= SimpleBeanPropertyFilter.filterOutAllExcept("review","date");
+        SimpleBeanPropertyFilter filter= SimpleBeanPropertyFilter.filterOutAllExcept("review","date"); //show only review and date
         SimpleFilterProvider filters = new SimpleFilterProvider().addFilter("ProductReviewDtoFilter",filter);
         MappingJacksonValue mapping = new MappingJacksonValue(productReviewDto);
         mapping.setFilters(filters);
